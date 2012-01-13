@@ -27,6 +27,8 @@
 #include "ext/standard/info.h"
 #include "php_qtfaststart.h"
 
+#include "qt-faststart-lib.h"
+
 /* If you declare any globals in php_qtfaststart.h uncomment this:
 ZEND_DECLARE_MODULE_GLOBALS(qtfaststart)
 */
@@ -34,12 +36,18 @@ ZEND_DECLARE_MODULE_GLOBALS(qtfaststart)
 /* True global resources - no need for thread safety here */
 static int le_qtfaststart;
 
+// stupid header changes during minor revisions
+#ifndef ZEND_FE_END
+	#define ZEND_FE_END            { NULL, NULL, NULL, 0, 0 }
+	#define PHP_FE_END ZEND_FE_END
+#endif
+
 /* {{{ qtfaststart_functions[]
  *
  * Every user visible function must have an entry in qtfaststart_functions[].
  */
 const zend_function_entry qtfaststart_functions[] = {
-	PHP_FE(confirm_qtfaststart_compiled,	NULL)		/* For testing, remove later. */
+	PHP_FE(qtfaststart,	NULL)		/* For testing, remove later. */
 	PHP_FE_END	/* Must be the last line in qtfaststart_functions[] */
 };
 /* }}} */
@@ -149,20 +157,30 @@ PHP_MINFO_FUNCTION(qtfaststart)
    purposes. */
 
 /* Every user-visible function in PHP should document itself in the source */
-/* {{{ proto string confirm_qtfaststart_compiled(string arg)
+/* {{{ proto string qtfaststart(string arg)
    Return a string to confirm that the module is compiled in */
-PHP_FUNCTION(confirm_qtfaststart_compiled)
+PHP_FUNCTION(qtfaststart)
 {
-	char *arg = NULL;
-	int arg_len, len;
+	char *infile = NULL;
+	int infile_len;
+
+	char *outfile = NULL;
+	int outfile_len;
+
 	char *strg;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &arg, &arg_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &infile, &infile_len, &outfile, &outfile_len) == FAILURE) {
 		return;
 	}
 
-	len = spprintf(&strg, 0, "Congratulations! You have successfully modified ext/%.78s/config.m4. Module %.78s is now compiled into PHP.", "qtfaststart", arg);
-	RETURN_STRINGL(strg, len, 0);
+
+	if(do_faststart(infile,outfile)==0)
+		RETURN_TRUE;
+	
+	RETURN_FALSE;
+
+	//len = spprintf(&strg, 0, "%.78s %.78s",infile,outfile);
+	//RETURN_STRINGL(strg, len, 0);
 }
 /* }}} */
 /* The previous line is meant for vim and emacs, so it can correctly fold and 

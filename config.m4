@@ -13,9 +13,9 @@ dnl [  --with-qtfaststart             Include qtfaststart support])
 
 dnl Otherwise use enable:
 
-dnl PHP_ARG_ENABLE(qtfaststart, whether to enable qtfaststart support,
+PHP_ARG_ENABLE(qtfaststart, whether to enable qtfaststart support,
 dnl Make sure that the comment is aligned:
-dnl [  --enable-qtfaststart           Enable qtfaststart support])
+[  --enable-qtfaststart           Enable qtfaststart support])
 
 if test "$PHP_QTFASTSTART" != "no"; then
   dnl Write more examples of tests here...
@@ -59,5 +59,5 @@ if test "$PHP_QTFASTSTART" != "no"; then
   dnl
   dnl PHP_SUBST(QTFASTSTART_SHARED_LIBADD)
 
-  PHP_NEW_EXTENSION(qtfaststart, qtfaststart.c, $ext_shared)
+  PHP_NEW_EXTENSION(qtfaststart, qtfaststart.c qt-faststart-lib.c, $ext_shared)
 fi

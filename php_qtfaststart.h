@@ -42,7 +42,7 @@ PHP_RINIT_FUNCTION(qtfaststart);
 PHP_RSHUTDOWN_FUNCTION(qtfaststart);
 PHP_MINFO_FUNCTION(qtfaststart);
 
-PHP_FUNCTION(confirm_qtfaststart_compiled);	/* For testing, remove later. */
+PHP_FUNCTION(qtfaststart);	/* For testing, remove later. */
 
 /* 
   	Declare any global variables you may need between the BEGIN
