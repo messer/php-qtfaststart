@@ -4,10 +4,10 @@
 // If your extension references something external, use ARG_WITH
 // ARG_WITH("qtfaststart", "for qtfaststart support", "no");
 
-// Otherwise, use ARG_ENABLE
-// ARG_ENABLE("qtfaststart", "enable qtfaststart support", "no");
+Otherwise, use ARG_ENABLE
+ARG_ENABLE("qtfaststart", "enable qtfaststart support", "no");
 
 if (PHP_QTFASTSTART != "no") {
-	EXTENSION("qtfaststart", "qtfaststart.c");
+	EXTENSION("qtfaststart", "qtfaststart.c qt-faststart-lib.c");
 }
 

@@ -100,7 +100,7 @@ int do_faststart(char *in, char *out)
 
     infile = fopen(in, "rb");
     if (!infile) {
-        perror(in);
+        //perror(in);
         goto error_out;
     }
 
@@ -119,13 +119,12 @@ int do_faststart(char *in, char *out)
             free(ftyp_atom);
             ftyp_atom = malloc(ftyp_atom_size);
             if (!ftyp_atom) {
-                printf("could not allocate %"PRIu64" bytes for ftyp atom\n",
-                       atom_size);
+                //printf("could not allocate %"PRIu64" bytes for ftyp atom\n",atom_size);
                 goto error_out;
             }
             fseeko(infile, -ATOM_PREAMBLE_SIZE, SEEK_CUR);
             if (fread(ftyp_atom, atom_size, 1, infile) != 1) {
-                perror(in);
+                //perror(in);
                 goto error_out;
             }
             start_offset = ftello(infile);
@@ -142,13 +141,14 @@ int do_faststart(char *in, char *out)
                 fseeko(infile, atom_size - ATOM_PREAMBLE_SIZE, SEEK_CUR);
             }
         }
-        printf("%c%c%c%c %10"PRIu64" %"PRIu64"\n",
+        /*printf("%c%c%c%c %10"PRIu64" %"PRIu64"\n",
                (atom_type >> 24) & 255,
                (atom_type >> 16) & 255,
                (atom_type >>  8) & 255,
                (atom_type >>  0) & 255,
                atom_offset,
                atom_size);
+	*/
         if ((atom_type != FREE_ATOM) &&
             (atom_type != JUNK_ATOM) &&
             (atom_type != MDAT_ATOM) &&
@@ -159,7 +159,7 @@ int do_faststart(char *in, char *out)
             (atom_type != PICT_ATOM) &&
             (atom_type != UUID_ATOM) &&
             (atom_type != FTYP_ATOM)) {
-            printf("encountered non-QT top-level atom (is this a QuickTime file?)\n");
+            //printf("encountered non-QT top-level atom (is this a QuickTime file?)\n");
             break;
         }
         atom_offset += atom_size;
@@ -172,7 +172,7 @@ int do_faststart(char *in, char *out)
     }
 
     if (atom_type != MOOV_ATOM) {
-        printf("last atom in file was not a moov atom\n");
+        //printf("last atom in file was not a moov atom\n");
         free(ftyp_atom);
         fclose(infile);
         return 0;
@@ -185,18 +185,18 @@ int do_faststart(char *in, char *out)
     moov_atom_size = atom_size;
     moov_atom      = malloc(moov_atom_size);
     if (!moov_atom) {
-        printf("could not allocate %"PRIu64" bytes for moov atom\n", atom_size);
+        //printf("could not allocate %"PRIu64" bytes for moov atom\n", atom_size);
         goto error_out;
     }
     if (fread(moov_atom, atom_size, 1, infile) != 1) {
-        perror(in);
+        //perror(in);
         goto error_out;
     }
 
     /* this utility does not support compressed atoms yet, so disqualify
      * files with compressed QT atoms */
     if (BE_32(&moov_atom[12]) == CMOV_ATOM) {
-        printf("this utility does not support compressed moov atoms yet\n");
+        //printf("this utility does not support compressed moov atoms yet\n");
         goto error_out;
     }
 
@@ -208,10 +208,10 @@ int do_faststart(char *in, char *out)
     for (i = 4; i < moov_atom_size - 4; i++) {
         atom_type = BE_32(&moov_atom[i]);
         if (atom_type == STCO_ATOM) {
-            printf(" patching stco atom...\n");
+            //printf(" patching stco atom...\n");
             atom_size = BE_32(&moov_atom[i - 4]);
             if (i + atom_size - 4 > moov_atom_size) {
-                printf(" bad atom size\n");
+                //printf(" bad atom size\n");
                 goto error_out;
             }
             offset_count = BE_32(&moov_atom[i + 8]);
@@ -225,10 +225,10 @@ int do_faststart(char *in, char *out)
             }
             i += atom_size - 4;
         } else if (atom_type == CO64_ATOM) {
-            printf(" patching co64 atom...\n");
+            //printf(" patching co64 atom...\n");
             atom_size = BE_32(&moov_atom[i - 4]);
             if (i + atom_size - 4 > moov_atom_size) {
-                printf(" bad atom size\n");
+                //printf(" bad atom size\n");
                 goto error_out;
             }
             offset_count = BE_32(&moov_atom[i + 8]);
@@ -251,7 +251,7 @@ int do_faststart(char *in, char *out)
     /* re-open the input file and open the output file */
     infile = fopen(in, "rb");
     if (!infile) {
-        perror(in);
+        //perror(in);
         goto error_out;
     }
 
@@ -262,28 +262,28 @@ int do_faststart(char *in, char *out)
 
     outfile = fopen(out, "wb");
     if (!outfile) {
-        perror(out);
+        //perror(out);
         goto error_out;
     }
 
     /* dump the same ftyp atom */
     if (ftyp_atom_size > 0) {
-        printf(" writing ftyp atom...\n");
+        //printf(" writing ftyp atom...\n");
         if (fwrite(ftyp_atom, ftyp_atom_size, 1, outfile) != 1) {
-            perror(out);
+            //perror(out);
             goto error_out;
         }
     }
 
     /* dump the new moov atom */
-    printf(" writing moov atom...\n");
+    //printf(" writing moov atom...\n");
     if (fwrite(moov_atom, moov_atom_size, 1, outfile) != 1) {
-        perror(out);
+        //perror(out);
         goto error_out;
     }
 
     /* copy the remainder of the infile, from offset 0 -> last_offset - 1 */
-    printf(" copying rest of file...\n");
+    //printf(" copying rest of file...\n");
     while (last_offset) {
         if (last_offset > COPY_BUFFER_SIZE)
             bytes_to_copy = COPY_BUFFER_SIZE;
@@ -291,11 +291,11 @@ int do_faststart(char *in, char *out)
             bytes_to_copy = last_offset;
 
         if (fread(copy_buffer, bytes_to_copy, 1, infile) != 1) {
-            perror(in);
+            //perror(in);
             goto error_out;
         }
         if (fwrite(copy_buffer, bytes_to_copy, 1, outfile) != 1) {
-            perror(out);
+            //perror(out);
             goto error_out;
         }
         last_offset -= bytes_to_copy;
