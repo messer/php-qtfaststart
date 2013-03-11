@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package version="2.1" xmlns="http://pear.php.net/dtd/package-2.1" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0     http://pear.php.net/dtd/tasks-1.0.xsd     http://pear.php.net/dtd/package-2.1     http://pear.php.net/dtd/package-2.1.xsd">
+ <name>qtfaststart</name>
+ <channel>pecl.php.net</channel>
+ <summary>qtfaststart by Marcel Esser &lt;marcel.esser@gmail.com&gt;
+</summary>
+ <description>
+A simple extension that wraps the qtfaststart utility
+by Mike Melanson (melanson@pcisys.net)
+
+Build:
+
+phpize
+./configure --enable-qtfaststart
+make
+make install
+
+Usage:
+&lt;?php
+// add extension to php.ini or do whatever you do
+dl('qtfaststart.so');
+
+// use it!
+// should return true (if test.mp4 exists and is is not already
+// optimized for streamed playback)
+var_dump(qtfaststart('test.mp4','out.mp4'));
+
+// should return false otherwise
+var_dump(qtfaststart('x','y'));
+
+</description>
+ <lead>
+  <name>Marcel Esser</name>
+  <user>messer</user>
+  <email>marcel.esser@gmail.com</email>
+  <active>yes</active>
+ </lead>
+ <date>2013-03-11</date>
+ <time>03:35:29</time>
+ <version>
+  <release>1.0.0</release>
+  <api>0.1.0</api>
+ </version>
+ <stability>
+  <release>stable</release>
+  <api>stable</api>
+ </stability>
+ <license uri="http://www.php.net/license/3_01.txt">PHP</license>
+ <notes>First pecl!
+</notes>
+ <contents>
+  <dir name="/">
+   <dir name="tests">
+    <file role="test" name="001.phpt" md5sum="5e5536bd21276ce3bde7f5f8db19769e"/>
+   </dir>
+   <file role="src" name="config.m4" md5sum="ca088955c0a5babc1bc659595b73723d"/>
+   <file role="src" name="config.w32" md5sum="d7239c44885ff4f50ab61655a0e3f002"/>
+   <file role="src" name="php_qtfaststart.h" md5sum="c0edafee35ec2a30b86a9793d7bb8328"/>
+   <file role="src" name="qt-faststart-lib.c" md5sum="57e678b6fa33f2c36abc84dc5c9da018"/>
+   <file role="src" name="qt-faststart-lib.h" md5sum="92bb7fb7ea3493deae5034ff68aab5b9"/>
+   <file role="src" name="qtfaststart.c" md5sum="1edc47b4dda921d93939d727d245d4ca"/>
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.2.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.8</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <providesextension>qtfaststart</providesextension>
+ <extsrcrelease/>
+</package>
